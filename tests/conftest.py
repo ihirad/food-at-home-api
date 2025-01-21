@@ -6,8 +6,6 @@ from app.db import db
 from flask.signals import request_finished
 from dotenv import load_dotenv
 import os
-from app.models.board import Board
-from app.models.card import Card
 
 load_dotenv()
 
