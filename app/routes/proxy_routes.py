@@ -7,7 +7,7 @@ load_dotenv()
 
 bp = Blueprint("proxy_bp", __name__)
 
-location_key = os.environ.get("RECIPE_KEY")
+recipe_key = os.environ.get("RECIPE_KEY")
 
 @bp.get("/recipes")
 def get_recipe():
