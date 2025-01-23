@@ -1,22 +1,26 @@
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped
 from ..db import db
 
-class recipe(db.Model):
+class Recipe(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
-    spoonacularid: Mapped[int]
-    userid: Mapped[int]
+    recipe_id: Mapped[int]
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user: Mapped["User"] = relationship(back_populates='recipes')
 
     def to_dict(self):
         return dict(
             name=self.name,
-            spoonacularid=self.spoonacularid,
-            userid=self.userid
+            recipe_id=self.recipe_id,
+            users=[user.to_dict() for user in self.user]
         )
     
     @classmethod
     def from_dict(cls, recipe_data):
         return cls(
             name=recipe_data["name"],
-            spoonacularid=recipe_data["spoonacularid"],
-            userid=recipe_data["userid"]
+            recipe_id=recipe_data["recipe_id"],
+            user_id=recipe_data["user_id"]
         )
