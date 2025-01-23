@@ -2,6 +2,7 @@ from flask import abort, make_response, request
 from ..db import db
 from ..models.ingredient import Ingredient
 from ..models.shopping_note import ShoppingNote
+from ..models.user import User
 
 def validate_model(cls, model_id):
     try:
@@ -12,7 +13,8 @@ def validate_model(cls, model_id):
     # map the model_id to the model
     id_mapping = {
         Ingredient: Ingredient.ingredient_id,
-        ShoppingNote: ShoppingNote.shopping_note_id
+        ShoppingNote: ShoppingNote.shopping_note_id,
+        User: User.user_id
     }
     
     if cls not in id_mapping:

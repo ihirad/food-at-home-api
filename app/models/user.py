@@ -1,12 +1,15 @@
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, mapped_column
 from ..db import db
 
 class user(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
     username: Mapped[str]
     password: Mapped[str]
     email: Mapped[str]
+
     def to_dict(self):
         return dict(
+            id=self.id,
             username=self.username,
             password=self.password,
             email=self.email
