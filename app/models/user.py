@@ -1,15 +1,15 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 from ..db import db
 
-class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+class user(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
     username: Mapped[str]
     password: Mapped[str]
     email: Mapped[str]
 
     def to_dict(self):
         return dict(
+            id=self.id,
             username=self.username,
             password=self.password,
             email=self.email
