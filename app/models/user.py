@@ -29,3 +29,24 @@ class User(db.Model):
             username=user_data["username"],
             password=user_data["password"],
             email=user_data["email"])
+    
+# Example JSON representation of User 
+example_json = {
+    "id": 1,
+    "username": "john_doe",
+    "email": "johndoe@example.com",
+    "ingredients": [
+        {
+            "id": 1,
+            "name": "Sugar",
+        },
+        {
+            "id": 2,
+            "name": "Flour",
+        },
+        {
+            "id": 3,
+            "name": "Eggs",
+        }
+    ]
+}
