@@ -11,7 +11,7 @@ class Recipe(db.Model):
     name: Mapped[str]
     recipe_id: Mapped[int]
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    user: Mapped["User"] = relationship(back_populates='recipe')
+    user: Mapped["User"] = relationship(back_populates='recipes')
 
     def to_dict(self):
         return dict(

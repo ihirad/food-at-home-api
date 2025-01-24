@@ -7,21 +7,22 @@ if TYPE_CHECKING:
 from sqlalchemy import ForeignKey
 
 
-class User(db.Model):
+class Foodie(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
     username: Mapped[str]
     password: Mapped[str]
     # email: Mapped[str]
-    ingredients: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
-    recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
-    recipe: Mapped[Optional["Recipe"]] = relationship(back_populates="users")
+    ingredients: Mapped[Optional[list["Ingredient"]]] = relationship(secondary="user_ingredient", back_populates="foodies")
+    # recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
+    recipe: Mapped[Optional[list["Recipe"]]] = relationship(back_populates="foodie")
 
     def to_dict(self):
         return dict(
-            id=self.id,
-            username=self.username,
-            password=self.password,
-            ingredients=[ingredient.to_dict() for ingredient in self.ingredients]
+            name=self.name,
+            recipe_id=self.recipe_id
+            # id=self.id,
+            # username=self.username,
+            # password=self.password,
             # email=self.email
         )
     @classmethod
@@ -29,5 +30,8 @@ class User(db.Model):
         return cls(
             username=user_data["username"],
             password=user_data["password"]
+            # name=recipe_data["name"],
+            # recipe=recipe_data["recipe_id"],
+            # user_data=recipe_data["user_id"]
             )
             # email=user_data["email"])
