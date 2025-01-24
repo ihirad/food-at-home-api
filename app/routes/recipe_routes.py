@@ -7,7 +7,7 @@ from app.routes.route_utilities import *
 import requests
 
 
-bp = Blueprint("user_bp", __name__, url_prefix="/recipes")
+bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")
 
 
 @bp.get("/")
