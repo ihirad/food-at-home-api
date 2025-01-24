@@ -1,10 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ingredient import Ingredient
     from .recipe import Recipe
-from sqlalchemy import ForeignKey
 
 
 class User(db.Model):
@@ -13,21 +12,20 @@ class User(db.Model):
     password: Mapped[str]
     # email: Mapped[str]
     ingredients: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
-    recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
-    recipe: Mapped[Optional["Recipe"]] = relationship(back_populates="users")
+    recipes: Mapped[list["Recipe"]] = relationship(back_populates="user") 
 
     def to_dict(self):
         return dict(
             id=self.id,
             username=self.username,
             password=self.password,
-            ingredients=[ingredient.to_dict() for ingredient in self.ingredients]
-            # email=self.email
+            email=self.email,
+            # ingredients=[ingredient.to_dict() for ingredient in self.ingredients],
         )
+    
     @classmethod
     def from_dict(cls, user_data):
         return cls(
             username=user_data["username"],
-            password=user_data["password"]
-            )
-            # email=user_data["email"])
+            password=user_data["password"],
+            email=user_data["email"])
