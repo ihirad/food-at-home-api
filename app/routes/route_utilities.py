@@ -3,6 +3,7 @@ from ..db import db
 from ..models.ingredient import Ingredient
 from ..models.shopping_note import ShoppingNote
 from ..models.user import User
+from ..models.recipe import Recipe
 
 def validate_model(cls, model_id):
     try:
@@ -14,7 +15,8 @@ def validate_model(cls, model_id):
     id_mapping = {
         Ingredient: Ingredient.ingredient_id,
         ShoppingNote: ShoppingNote.shopping_note_id,
-        User: User.user_id
+        User: User.user_id,
+        Recipe: Recipe.recipe_id
     }
     
     if cls not in id_mapping:

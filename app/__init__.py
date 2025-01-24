@@ -5,8 +5,9 @@ from .db import db, migrate
 from .routes.ingredient_routes import bp as ingredient_bp
 from .routes.shopping_note_routes import bp as shopping_note_bp
 from .routes.proxy_routes import bp as proxy_bp
-from .models import Ingredient, ShoppingNote, UserIngredient, User
+from .models import Ingredient, ShoppingNote, UserIngredient, User, Recipe
 from .routes.user_routes import bp as user_bp
+from .routes.recipe_routes import bp as recipe_bp
 
 def create_app(config=None):
     app = Flask(__name__)
@@ -25,4 +26,5 @@ def create_app(config=None):
     app.register_blueprint(shopping_note_bp)
     app.register_blueprint(proxy_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(recipe_bp)
     return app

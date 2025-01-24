@@ -1,14 +1,20 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
-  from .user import User
+  from .ingredient import Ingredient
+from sqlalchemy import ForeignKey
+from .recipe import Recipe
+
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
     username: Mapped[str]
     password: Mapped[str]
     email: Mapped[str]
+    books: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
+    recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
+    recipe: Mapped[Optional["Recipe"]] = relationship(back_populates="users")
 
     def to_dict(self):
         return dict(
