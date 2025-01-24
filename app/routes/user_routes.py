@@ -31,8 +31,9 @@ def login_user():
         abort(make_response({"message": "Invalid username or password"}, 400))
     username = request_body["username"]
     password = request_body["password"]
-    user = db.session.execute(db.select(User).where(User.username == username)).scalar()
-    if not user or not user.check_password(password):
+    user = db.session.execute(db.select(Foodie).where(Foodie.username == username)).scalar()
+    # if not user or not user.check_password(password):
+    if not user or not user.password:
         abort(make_response({"message": "Invalid username or password"}, 400))
     session["user_id"] = user.id
     return make_response({"message": f"User {user.id} logged in"}, 200)
@@ -44,7 +45,7 @@ def logout_user():
 
 @bp.delete("/<user_id>")
 def delete_user(user_id):
-    user = validate_model(User, user_id)
+    user = validate_model(Foodie, user_id)
     db.session.delete(user)
     db.session.commit()
     return make_response({"message": f"User {user_id} deleted"}, 200)
