@@ -11,7 +11,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
     username: Mapped[str]
     password: Mapped[str]
-    email: Mapped[str]
+    # email: Mapped[str]
     ingredients: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
     recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
     recipe: Mapped[Optional["Recipe"]] = relationship(back_populates="users")
@@ -21,11 +21,13 @@ class User(db.Model):
             id=self.id,
             username=self.username,
             password=self.password,
-            email=self.email
+            ingredients=[ingredient.to_dict() for ingredient in self.ingredients]
+            # email=self.email
         )
     @classmethod
     def from_dict(cls, user_data):
         return cls(
             username=user_data["username"],
-            password=user_data["password"],
-            email=user_data["email"])
+            password=user_data["password"]
+            )
+            # email=user_data["email"])

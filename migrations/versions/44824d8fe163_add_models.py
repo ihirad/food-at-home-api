@@ -23,14 +23,7 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('recipe',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('recipe_id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
+    
     op.create_table('user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('username', sa.String(), nullable=False),
@@ -40,6 +33,24 @@ def upgrade():
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    
+    op.create_table('recipe',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    # op.create_table('user',
+    # sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    # sa.Column('username', sa.String(), nullable=False),
+    # sa.Column('password', sa.String(), nullable=False),
+    # sa.Column('email', sa.String(), nullable=False),
+    # sa.Column('recipe_id', sa.Integer(), nullable=True),
+    # sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
+    # sa.PrimaryKeyConstraint('id')
+    # )
     op.create_table('shopping_note',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('note', sa.String(), nullable=False),
