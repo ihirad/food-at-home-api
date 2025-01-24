@@ -3,20 +3,20 @@ from ..db import db
 from sqlalchemy import ForeignKey
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-  from .user import User
+    from .user import Foodie
 
 
 class ShoppingNote(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     note: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    user: Mapped["User"] = relationship(back_populates='shopping_notes')
+    foodie_id: Mapped[int] = mapped_column(ForeignKey('foodie.id'))
+    foodie: Mapped["Foodie"] = relationship(back_populates='shopping_notes')
 
     def to_dict(self):
         return {
             'id': self.id,
             'note': self.note,
-            'user': self.user.to_dict() if self.user else None
+            'user': self.user_foodie.to_dict() if self.user_foodie else None
         }
     
     @classmethod

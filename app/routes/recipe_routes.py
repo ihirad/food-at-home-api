@@ -1,11 +1,10 @@
 from flask import Blueprint,request,abort,make_response
-from app.models.user import User
+from app.models.user import Foodie
 from app.models.recipe import Recipe
 from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
 import requests
-# from .env import spoonacularId
 
 
 bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")

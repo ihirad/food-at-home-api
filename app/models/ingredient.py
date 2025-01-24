@@ -1,20 +1,20 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
-from typing import TYPE_CHECKING,Optional
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
   from .user import Foodie
 
 class Ingredient(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
-    user_foodie: Mapped[Optional[list["Foodie"]]]= relationship(
+    foodies: Mapped[Optional[list["Foodie"]]] = relationship(
         secondary="user_ingredient", back_populates="ingredients")
 
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
-            'users': [user.to_dict() for user in self.user]
+            'foodies': [foodie.to_dict() for foodie in self.foodies]
         }
     
     @classmethod
