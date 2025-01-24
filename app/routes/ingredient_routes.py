@@ -8,25 +8,6 @@ from app.routes.route_utilities import *
 
 bp = Blueprint("ingredients_bp", __name__, url_prefix="/ingredients")
 
-# @bp.post("")
-# def post_ingredient():
-#     request_body = request.get_json()
-#     ingredient_name = request_body.get("name")
-#     if not ingredient_name:
-#         abort(make_response({"message": "Missing required field: 'name'"}, 400))
-#     # query = db.select(Ingredient).where(Ingredient.name == ingredient_name)
-#     # existing_ingredient = db.session.scalar(query)
-
-#     existing_ingredient = db.session.query(Ingredient).filter_by(name=ingredient_name).first()
-
-#     if existing_ingredient:
-#         return make_response({
-#             "message": f"Ingredient '{ingredient_name}' already exists",
-#             "ingredient": existing_ingredient.to_dict()
-#         }, 200)
-
-#     return create_model(Ingredient, {"name": ingredient_name})
-
 
 @bp.post("/<user_id>/ingredients")
 def add_or_create_ingredient(user_id):

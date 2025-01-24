@@ -5,7 +5,6 @@ from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
 import requests
-from .env import spoonacularId
 
 
 bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")
