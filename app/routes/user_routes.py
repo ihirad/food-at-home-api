@@ -1,5 +1,5 @@
 from flask import Blueprint,request,abort,make_response
-from app.models.user import User
+from app.models.user import Foodie
 from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
@@ -17,10 +17,10 @@ def register_user():
         abort(make_response({"message": "Invalid username or password"}, 400))
     username = request_body["username"]
     password = request_body["password"]
-    user = User(username=username, password=generate_password_hash(password))
-    db.session.add(user)
+    foodie = Foodie(username=username, password=generate_password_hash(password))
+    db.session.add(foodie)
     db.session.commit()
-    return make_response({"message": f"User {user.id} created"}, 201)
+    return make_response({"message": f"User {foodie.id} created"}, 201)
 
 @bp.post("/login")
 def login_user():

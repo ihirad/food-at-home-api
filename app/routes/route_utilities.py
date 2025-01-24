@@ -2,7 +2,7 @@ from flask import abort, make_response, request
 from ..db import db
 from ..models.ingredient import Ingredient
 from ..models.shopping_note import ShoppingNote
-from ..models.user import User
+from ..models.user import Foodie
 from ..models.recipe import Recipe
 
 def validate_model(cls, model_id):

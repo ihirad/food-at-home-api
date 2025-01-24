@@ -1,5 +1,5 @@
 from flask import Blueprint,request,abort,make_response
-from app.models.user import User
+from app.models.user import Foodie
 from app.models.recipe import Recipe
 from ..db import db
 from .route_utilities import validate_model
