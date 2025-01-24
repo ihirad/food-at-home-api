@@ -12,8 +12,8 @@ bp = Blueprint("ingredients_bp", __name__, url_prefix="/ingredients")
 def add_or_create_ingredient(user_id):
     user = validate_model(User, user_id)
     request_body = request.get_json()
-
     ingredient_name = request_body.get("name")
+    
     if not ingredient_name:
         abort(make_response({"message": "Missing required field: 'name'"}, 400))
         
@@ -25,7 +25,7 @@ def add_or_create_ingredient(user_id):
             existing_ingredient.user.append(user)
             db.session.commit()
         return make_response({
-            "message": f"Ingredient '{ingredient_name}' updated successfully",
+            "message": f"Ingredient '{ingredient_name}' updated",
             "ingredient": existing_ingredient.to_dict()
         }, 200)
     else:
@@ -38,6 +38,7 @@ def add_or_create_ingredient(user_id):
 @bp.get("/<user_id>")
 def get_all_ingredients(user_id):
     user = validate_model(User, user_id)
-    filters = dict(request.args)
-    filters["user_id"] = user.id
-    return get_models_with_filters(Ingredient, filters)
+    ingredients = user.ingredients 
+    return make_response({
+        "ingredients": [ingredient.to_dict() for ingredient in ingredients]
+    }, 200)

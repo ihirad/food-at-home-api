@@ -1,5 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from ..db import db
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+  from .user import User
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
