@@ -5,6 +5,7 @@ from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
 import requests
+from .env import spoonacularId
 
 
 bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")
@@ -22,7 +23,7 @@ def get_recipes():
         response = requests.get(
             "https://api.spoonacular.com/recipes/findByIngredients",
             params={
-                "apiKey": "000",  
+                "apiKey": spoonacularId,  
                 "number": 10,
                 "ingredients": ingredients
             }
@@ -32,8 +33,12 @@ def get_recipes():
             abort(make_response({"message": "Failed to fetch recipes"}, response.status_code))
         
         recipes = response.json()  
-        return make_response({"recipes": recipes}, 200)
-
+        
+        filtered_recipes = [
+            {"id": recipe["id"], "name": recipe["title"], "image": recipe["image"]}
+            for recipe in recipes
+        ]
+        return make_response({"recipes": filtered_recipes}, 200)
     except requests.exceptions.RequestException as e:
         abort(make_response({"message": "An error occurred while fetching recipes", "error": str(e)}, 500))
 
@@ -41,7 +46,7 @@ def get_recipes():
 def save_recipe():
     request_data = request.get_json()
 
-    if not request_data or "name" not in request_data or "spoonacularid" not in request_data or "userid" not in request_data:
+    if not request_data or "name" not in request_data or "recipe_id" not in request_data or "user_id" not in request_data:
         return make_response({"message": "Invalid data"}, 400)
     
     new_recipe = Recipe.from_dict(request_data)
