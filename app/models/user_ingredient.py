@@ -19,4 +19,11 @@ class UserIngredient(db.Model):
     @classmethod
     def from_dict(cls, data):
         return UserIngredient(quantity=data['quantity'], unit=data['unit'])
-    
+
+# Example JSON representation of UserIngredient
+example_json = {
+    "user_id": 1,
+    "ingredient_id": 101,
+    "quantity": 2.5,
+    "unit": "kg",
+}

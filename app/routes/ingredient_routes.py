@@ -7,3 +7,37 @@ from app.routes.route_utilities import *
 
 
 bp = Blueprint("ingredients_bp", __name__, url_prefix="/ingredients")
+
+@bp.post("/<user_id>/ingredients")
+def add_or_create_ingredient(user_id):
+    user = validate_model(User, user_id)
+    request_body = request.get_json()
+
+    ingredient_name = request_body.get("name")
+    if not ingredient_name:
+        abort(make_response({"message": "Missing required field: 'name'"}, 400))
+        
+    query = db.select(Ingredient).where(Ingredient.name == ingredient_name)
+    existing_ingredient = db.session.scalar(query)
+
+    if existing_ingredient:
+        if user not in existing_ingredient.user:
+            existing_ingredient.user.append(user)
+            db.session.commit()
+        return make_response({
+            "message": f"Ingredient '{ingredient_name}' updated successfully",
+            "ingredient": existing_ingredient.to_dict()
+        }, 200)
+    else:
+        new_ingredient_data = {
+            "name": ingredient_name,
+            "users": [{"id": user.id}]
+        }
+        return create_model(Ingredient, new_ingredient_data)
+
+@bp.get("/<user_id>")
+def get_all_ingredients(user_id):
+    user = validate_model(User, user_id)
+    filters = dict(request.args)
+    filters["user_id"] = user.id
+    return get_models_with_filters(Ingredient, filters)
