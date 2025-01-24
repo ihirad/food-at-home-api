@@ -12,7 +12,7 @@ class User(db.Model):
     username: Mapped[str]
     password: Mapped[str]
     email: Mapped[str]
-    books: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
+    ingredients: Mapped[list["Ingredient"]] = relationship(secondary="user_ingredient", back_populates="users")
     recipe_id: Mapped[Optional[int]] = mapped_column(ForeignKey("recipe.id"))
     recipe: Mapped[Optional["Recipe"]] = relationship(back_populates="users")
 
