@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from .ingredient import Ingredient
     from .recipe import Recipe
+    from .shopping_note import ShoppingNote
 
 
 class Foodie(db.Model):
@@ -14,6 +15,7 @@ class Foodie(db.Model):
     ingredients: Mapped[Optional[list["Ingredient"]]] = relationship(
         secondary="user_ingredient", back_populates="foodies")
     recipes: Mapped[Optional[list["Recipe"]]] = relationship(back_populates="foodie") 
+    shopping_notes: Mapped[Optional[list["ShoppingNote"]]] = relationship(back_populates="foodie")
 
     def to_dict(self):
         return dict(
