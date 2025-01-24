@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 import os
 from .db import db, migrate
-from .models import User, ShoppingNote, UserIngredient, Recipe, Ingredient
+from .models import ShoppingNote, UserIngredient, Recipe, Ingredient, User
 from .routes.ingredient_routes import bp as ingredient_bp
 from .routes.shopping_note_routes import bp as shopping_note_bp
 from .routes.proxy_routes import bp as proxy_bp

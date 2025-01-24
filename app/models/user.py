@@ -2,9 +2,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
-  from .ingredient import Ingredient
+    from .ingredient import Ingredient
+    from .recipe import Recipe
 from sqlalchemy import ForeignKey
-from .recipe import Recipe
 
 
 class User(db.Model):
