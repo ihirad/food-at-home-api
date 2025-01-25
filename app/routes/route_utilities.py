@@ -1,9 +1,15 @@
-from flask import abort, make_response, request
+from flask import abort, make_response, request, session
 from ..db import db
 from ..models.ingredient import Ingredient
 from ..models.shopping_note import ShoppingNote
 from ..models.user import Foodie
 from ..models.recipe import Recipe
+
+def get_logged_in_user():
+    user_id = session.get("user_id")
+    if not user_id:
+        abort(make_response({"message": "User not logged in"}, 401))
+    return user_id
 
 def validate_model(cls, model_id):
     try:
@@ -11,14 +17,13 @@ def validate_model(cls, model_id):
     except ValueError: 
         abort(make_response({"message":f"{cls.__name__} id {model_id} is invalid"}, 400))
     
-    # map the model_id to the model
     id_mapping = {
-        Ingredient: Ingredient.ingredient_id,
-        ShoppingNote: ShoppingNote.shopping_note_id,
-        User: User.user_id,
-        Recipe: Recipe.recipe_id
+        Ingredient: Ingredient.id,
+        ShoppingNote: ShoppingNote.id,
+        Foodie: Foodie.id,
+        Recipe: Recipe.id
     }
-    
+
     if cls not in id_mapping:
         abort(make_response({"message": f"Invalid model type: {cls.__name__}"}, 400))
         

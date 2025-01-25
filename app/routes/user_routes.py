@@ -1,9 +1,8 @@
-from flask import Blueprint,request,abort,make_response
+from flask import Blueprint,request,abort,make_response, session
 from app.models.user import Foodie
 from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
-from flask import Flask, request, render_template, redirect, session
 from werkzeug.security import generate_password_hash
 
 bp = Blueprint("user_bp", __name__, url_prefix="/users")
@@ -50,3 +49,4 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return make_response({"message": f"User {user_id} deleted"}, 200)
+

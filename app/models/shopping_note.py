@@ -16,10 +16,11 @@ class ShoppingNote(db.Model):
         return {
             'id': self.id,
             'note': self.note,
-            'user': self.user_foodie.to_dict() if self.user_foodie else None
+            'foodie': self.foodie.to_dict() if self.foodie else None
         }
     
     @classmethod
     def from_dict(cls, data):
-        return ShoppingNote(note=data['note'])
+        return ShoppingNote(note=data['note'],
+            foodie_id=data['foodie_id'])
     
