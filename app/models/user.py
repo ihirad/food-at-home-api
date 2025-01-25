@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
 from typing import TYPE_CHECKING, Optional
+from werkzeug.security import check_password_hash
 if TYPE_CHECKING:
     from .ingredient import Ingredient
     from .recipe import Recipe
@@ -31,7 +32,9 @@ class Foodie(db.Model):
             password=user_data["password"],
             # email=user_data["email"]
             )
-    
+    def check_password(self, password):
+
+        return check_password_hash(self.password, password)
 # # Example JSON representation of User 
 # example_json = {
 #     "id": 1,
