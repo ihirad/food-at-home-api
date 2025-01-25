@@ -13,10 +13,10 @@ def validate_model(cls, model_id):
     
     # map the model_id to the model
     id_mapping = {
-        Ingredient: Ingredient.ingredient_id,
-        ShoppingNote: ShoppingNote.shopping_note_id,
-        User: User.user_id,
-        Recipe: Recipe.recipe_id
+        Ingredient: Ingredient.id,
+        ShoppingNote: ShoppingNote.id,
+        Foodie: Foodie.id,
+        Recipe: Recipe.id
     }
     
     if cls not in id_mapping:

@@ -9,16 +9,17 @@ if TYPE_CHECKING:
 class Recipe(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
+    recipe_id: Mapped[int]
     foodie_id: Mapped[int] = mapped_column(ForeignKey('foodie.id'))
     foodie: Mapped["Foodie"] = relationship(back_populates='recipes')
 
     def to_dict(self):
         return dict(
+            id=self.id,
             name=self.name,
             recipe_id=self.recipe_id,
-            # user_id=self.user_id,
-            # user= self.user.to_dict() if self.user else None
-            # users=[user.to_dict() for user in self.user]
+            foodie_id=self.foodie_id
+            
         )
     
     @classmethod
@@ -26,5 +27,5 @@ class Recipe(db.Model):
         return cls(
             name=recipe_data["name"],
             recipe_id=recipe_data["recipe_id"],
-            user_id=recipe_data["user_id"]
+            foodie_id=recipe_data["foodie_id"]
         )

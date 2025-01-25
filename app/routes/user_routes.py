@@ -1,7 +1,7 @@
 from flask import Blueprint,request,abort,make_response
 from app.models.user import Foodie
 from ..db import db
-from .route_utilities import validate_model
+from app.routes.route_utilities import validate_model
 from app.routes.route_utilities import *
 from flask import Flask, request, render_template, redirect, session
 from werkzeug.security import generate_password_hash

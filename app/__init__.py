@@ -20,6 +20,7 @@ def create_app(config=None):
     
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
     app.secret_key = os.environ.get('SECRET_KEY')
+    app.SPOONACULAR_ID = os.getenv("SPOONACULAR_ID")
 
     if config:
         app.config.update(config)
