@@ -1,10 +1,16 @@
-from flask import Blueprint,request,abort,make_response
+from flask import Blueprint, request, abort, make_response, session
 from app.models.user import Foodie
 from app.models.recipe import Recipe
 from ..db import db
 from .route_utilities import validate_model
 from app.routes.route_utilities import *
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+SPOONACULAR_ID = os.getenv("SPOONACULAR_ID")
+
 
 
 bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")
@@ -22,7 +28,7 @@ def get_recipes():
         response = requests.get(
             "https://api.spoonacular.com/recipes/findByIngredients",
             params={
-                "apiKey": spoonacularId,  
+                "apiKey": SPOONACULAR_ID,  
                 "number": 10,
                 "ingredients": ingredients
             }
@@ -41,28 +47,37 @@ def get_recipes():
     except requests.exceptions.RequestException as e:
         abort(make_response({"message": "An error occurred while fetching recipes", "error": str(e)}, 500))
 
-@bp.post("/save")
-def save_recipe():
-    request_data = request.get_json()
 
-    if not request_data or "name" not in request_data or "recipe_id" not in request_data or "user_id" not in request_data:
-        return make_response({"message": "Invalid data"}, 400)
-    
-    new_recipe = Recipe.from_dict(request_data)
-    
+@bp.post("/")
+def create_recipe():
+    request_body = request.get_json()
+
     try:
-        db.session.add(new_recipe)
-        db.session.commit()
-        return make_response({"message": "Recipe saved successfully"}, 201)
+        new_recipe = Recipe.from_dict(request_body)
+     
+    except KeyError:
+        response = {"details":f"Invalid data"}
+        abort(make_response(response,400))
+
+
+    db.session.add(new_recipe)
+    db.session.commit()
+
+    response = new_recipe.to_dict()
+
+    return response,201
+
+@bp.get("/all")
+def get_all_recipes():
+    try:
+        query = db.select(Recipe).order_by(Recipe.id)
+        recipes = db.session.scalars(query).all()
+
+        recipes_response = [recipe.to_dict() for recipe in recipes]
+        return recipes_response, 200
     except Exception as e:
-        db.session.rollback()
-        return make_response({"message": "An error occurred while saving the recipe", "error": str(e)}, 500)
-    
-@bp.get("/<user_id>")
-def get_all_recipes(user_id):
-    user = validate_model(User, user_id)
-    recipes = db.session.execute(db.select(Recipe).where(Recipe.userid == user_id)).scalars().all()
-    return make_response({"recipes": [recipe.to_dict() for recipe in recipes]}, 200)
+        print(f"Error fetching recipes: {e}")  
+        return {"error": "An error occurred while fetching recipes."}, 500
 
 @bp.delete("/<recipe_id>")
 def delete_recipe(recipe_id):
