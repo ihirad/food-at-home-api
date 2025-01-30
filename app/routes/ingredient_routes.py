@@ -44,8 +44,21 @@ def get_all_ingredients():
     user_id = get_logged_in_user()
     user = validate_model(Foodie, user_id)
     ingredients = user.ingredients
-    ingredient_names = [ingredient.name for ingredient in ingredients]
-    return make_response({"ingredients": ingredient_names}, 200)
+    ingredient_response = [
+        {
+            "id": ingredient.id,
+            "ingredient": ingredient.name
+        }
+        for ingredient in ingredients
+    ]
+    return make_response({"ingredients": ingredient_response}, 200)
+# @bp.get("")
+# def get_all_ingredients():
+#     user_id = get_logged_in_user()
+#     user = validate_model(Foodie, user_id)
+#     ingredients = user.ingredients
+#     ingredient_names = [ingredient.name for ingredient in ingredients]
+#     return make_response({"ingredients": ingredient_names}, 200)
 
 @bp.delete("/<ingredient_id>")
 def delete_ingredient(ingredient_id):
