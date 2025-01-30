@@ -20,21 +20,3 @@ class Ingredient(db.Model):
     @classmethod
     def from_dict(cls, data):
         return Ingredient(name=data['name'])
-
-# Example JSON representation of Ingredient
-# example_json = {
-#     "id": 1,
-#     "name": "Sugar",
-#     "users": [
-#         {
-#             "id": 1,
-#             "username": "john_doe",
-#             "email": "john@example.com",
-#         },
-#         {
-#             "id": 2,
-#             "username": "jane_doe",
-#             "email": "jane@example.com",
-#         }
-#     ]
-# }
