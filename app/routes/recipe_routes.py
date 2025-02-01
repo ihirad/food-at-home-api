@@ -41,6 +41,29 @@ def get_recipes():
     except requests.exceptions.RequestException as e:
         abort(make_response({"message": "An error occurred while fetching recipes", "error": str(e)}, 500))
 
+@bp.get("/<recipe_id>")
+def get_recipe_by_id(recipe_id):
+    recipe_id = int(recipe_id)
+    if not recipe_id:
+        return make_response({"message": "Please provide a valid recipe id"}, 400)
+    try:
+        response = requests.get(
+            f"https://api.spoonacular.com/recipes/{recipe_id}/information",
+            params={
+                "apiKey": SPOONACULAR_ID,
+                "includeNutrition": "false",
+                "addRecipeInformation": "true",
+                "addRecipeInstructions": "true",
+                "fillIngredients": "true"
+            }
+        )
+        if response.status_code != 200:
+            abort(make_response({"message": "Failed to fetch recipe information"}, response.status_code))
+        recipe = response.json()
+        return make_response({"recipe": recipe}, 200)
+    except requests.exceptions.RequestException as e:
+        abort(make_response({"message": "An error occurred while fetching recipe information", "error": str(e)}, 500))
+        
 @bp.post("")
 def save_recipe():
     user_id = get_logged_in_user()

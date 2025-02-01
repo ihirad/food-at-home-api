@@ -1,4 +1,5 @@
 from flask import Blueprint, request, abort, make_response, session, url_for, redirect, jsonify, current_app, flash, render_template
+from werkzeug.security import generate_password_hash
 import requests
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -15,13 +16,14 @@ from app.extensions import oauth
 
 
 
+
 def init_routes(app):
     from app import create_app
     
 # login_manager = LoginManager()
 # login_manager.login_view = "login"
 
-# from werkzeug.security import generate_password_hash, check_password_hash
+
 
 bp = Blueprint("user_bp", __name__, url_prefix="/users")
 
@@ -72,9 +74,9 @@ bp = Blueprint("user_bp", __name__, url_prefix="/users")
 
 # Google login
 
-@bp.get("/login")
-def login():
-    return oauth.google.authorize_redirect(url_for("user_bp.authorize", _external=True))
+# @bp.get("/login")
+# def login():
+#     return oauth.google.authorize_redirect(url_for("user_bp.authorize", _external=True))
 
 
 # @bp.get("/authorize")
@@ -82,36 +84,36 @@ def login():
 #     token = oauth.google.authorize_access_token()  # Get token from Google
 #     user_info = oauth.google.parse_id_token(token)  # Parse user info
 #     return jsonify(user_info)  # Return user info (or create session)
-
+# ...........................
 
 # Google OAuth callback
-@bp.post("/authorize")
-def authorize():
-    token = oauth.google.authorize_access_token()
-    user_info = token.get("userinfo")
+# @bp.post("/authorize")
+# def authorize():
+#     token = oauth.google.authorize_access_token()
+#     user_info = token.get("userinfo")
 
-    if not user_info:
-        return "Failed to fetch user info", 400
+#     if not user_info:
+#         return "Failed to fetch user info", 400
 
-    # Check if user exists
-    user = Foodie.query.filter_by(email=user_info["email"]).first()
+#     # Check if user exists
+#     user = Foodie.query.filter_by(email=user_info["email"]).first()
     
-    if not user:
-        user = Foodie(email=user_info["email"], name=user_info["name"])
-        db.session.add(user)
-        db.session.commit()
+#     if not user:
+#         user = Foodie(email=user_info["email"], name=user_info["user_name"])
+#         db.session.add(user)
+#         db.session.commit()
 
     # login_user(user)
-    session["user_id"] = user.id
-    session["user_name"] = user.name
-    session["user_email"] = user.email
-    return redirect(url_for("profile"))
-    return jsonify({"message": "User logged in successfully!"})
+    # session["user_id"] = user.id
+    # session["user_name"] = user.username
+    # session["user_email"] = user.email
+    # return redirect(url_for("profile"))
+    # return jsonify({"message": "User logged in successfully!"})
 
-@bp.get("/profile")
-def profile():
-    return jsonify({"name": session["user_name"], "email": session["user_email"]})
-
+# @bp.get("/profile")
+# def profile():
+#     return jsonify({"name": session["user_name"], "email": session["user_email"]})
+# .........................
 # Read user profile (R in CRUD)
 # @bp.get("/profile")
 # # @login_required
@@ -390,46 +392,46 @@ def profile():
 
           
 
-# @bp.post("/register")
-# def register_user():
-#     request_body = request.get_json()
-#     if "username" not in request_body or "password" not in request_body:
-#         abort(make_response({"message": "Missing username or password"}, 400))
-#     if not request_body["username"] or not request_body["password"]:
-#         abort(make_response({"message": "Invalid username or password"}, 400))
-#     username = request_body["username"]
-#     password = request_body["password"]
-#     foodie = Foodie(username=username, password=generate_password_hash(password))
-#     db.session.add(foodie)
-#     db.session.commit()
-#     return make_response({"message": f"User {foodie.id} created"}, 201)
+@bp.post("/register")
+def register_user():
+    request_body = request.get_json()
+    if "username" not in request_body or "password" not in request_body:
+        abort(make_response({"message": "Missing username or password"}, 400))
+    if not request_body["username"] or not request_body["password"]:
+        abort(make_response({"message": "Invalid username or password"}, 400))
+    username = request_body["username"]
+    password = request_body["password"]
+    foodie = Foodie(username=username, password=generate_password_hash(password))
+    db.session.add(foodie)
+    db.session.commit()
+    return make_response({"message": f"User {foodie.id} created"}, 201)
 
-# @bp.post("/login")
-# def login_user():
-#     request_body = request.get_json()
-#     if "username" not in request_body or "password" not in request_body:
-#         abort(make_response({"message": "Missing username or password"}, 400))
-#     if not request_body["username"] or not request_body["password"]:
-#         abort(make_response({"message": "Invalid username or password"}, 400))
+@bp.post("/login")
+def login_user():
+    request_body = request.get_json()
+    if "username" not in request_body or "password" not in request_body:
+        abort(make_response({"message": "Missing username or password"}, 400))
+    if not request_body["username"] or not request_body["password"]:
+        abort(make_response({"message": "Invalid username or password"}, 400))
     
-#     username = request_body["username"]
-#     password = request_body["password"]
+    username = request_body["username"]
+    password = request_body["password"]
     
-#     foodie = Foodie.query.filter_by(username=username).first()
-#     if not foodie or not foodie.check_password(password):
-#         abort(make_response({"message": "Invalid username or password"}, 401))
-#     session["user_id"] = foodie.id
-#     return make_response({"message": f"User {foodie.id} logged in"}, 200)
+    foodie = Foodie.query.filter_by(username=username).first()
+    if not foodie or not foodie.check_password(password):
+        abort(make_response({"message": "Invalid username or password"}, 401))
+    session["user_id"] = foodie.id
+    return make_response({"message": f"User {foodie.id} logged in"}, 200)
 
-# @bp.get("/logout")
-# def logout_user():
-#     session.pop("user_id")
-#     return make_response({"message": "User logged out"}, 200)
+@bp.get("/logout")
+def logout_user():
+    session.pop("user_id")
+    return make_response({"message": "User logged out"}, 200)
 
-# @bp.delete("/<user_id>")
-# def delete_user(user_id):
-#     user = validate_model(Foodie, user_id)
-#     db.session.delete(user)
-#     db.session.commit()
-#     return make_response({"message": f"User {user_id} deleted"}, 200)
+@bp.delete("/<user_id>")
+def delete_user(user_id):
+    user = validate_model(Foodie, user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return make_response({"message": f"User {user_id} deleted"}, 200)
 

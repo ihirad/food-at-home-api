@@ -2,7 +2,7 @@ from flask import Flask,redirect, url_for,session,render_template
 from flask_cors import CORS
 import os
 from .db import db, migrate
-from .models import shopping_note, user, ingredient, recipe, ingredient
+from .models import shopping_note, user, ingredient, recipe, ingredient, user_ingredient
 from .routes.ingredient_routes import bp as ingredient_bp
 from .routes.shopping_note_routes import bp as shopping_note_bp
 from .routes.user_routes import bp as user_bp
