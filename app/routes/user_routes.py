@@ -1,12 +1,12 @@
 from flask import Blueprint, request, abort, make_response, session, url_for, redirect, jsonify, current_app, flash, render_template
 from werkzeug.security import generate_password_hash
 import requests
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+# from google.oauth2 import id_token
+# from google.auth.transport import requests as google_requests
 # from flask_login import LoginManager, UserMixin, login_user, logout_user,login_required, current_user
 # import secrets
 # from urllib.parse import urlencode
-from authlib.integrations.flask_client import OAuth
+# from authlib.integrations.flask_client import OAuth
 from app.models.user import Foodie
 from ..db import db
 from app.routes.route_utilities import validate_model
