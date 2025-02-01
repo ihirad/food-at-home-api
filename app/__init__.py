@@ -10,8 +10,8 @@ from .routes.recipe_routes import bp as recipe_bp
 from dotenv import load_dotenv
 # from authlib.integrations.flask_client import OAuth
 from app.extensions import oauth
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+# from google.oauth2 import id_token
+# from google.auth.transport import requests as google_requests
 
 # from flask_login import LoginManager
 
