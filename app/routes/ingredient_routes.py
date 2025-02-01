@@ -14,30 +14,60 @@ def add_or_create_ingredient():
     
     request_body = request.get_json()
     ingredient_name = request_body.get("name")
+    print("ingredient_name:", ingredient_name)
     if not ingredient_name:
         abort(make_response({"message": "Missing required field: 'name'"}, 400))
         
     query = db.select(Ingredient).where(Ingredient.name == ingredient_name)
     existing_ingredient = db.session.scalar(query)
+    print("existing_ingredient:", existing_ingredient)
 
     if existing_ingredient:
         if user not in existing_ingredient.foodies:
             existing_ingredient.foodies.append(user)
             db.session.commit()
+        #
+        existing_ingredient_response = existing_ingredient.to_dict()
+        existing_ingredient_response["ingredient"] = existing_ingredient_response.pop("name")
         return make_response({
             "message": f"Ingredient '{ingredient_name}' updated",
-            "ingredient": existing_ingredient.to_dict()
+            "ingredient": existing_ingredient_response
         }, 200)
     else:
         new_ingredient = Ingredient(name=ingredient_name)
         new_ingredient.foodies.append(user)  # Associate it with the Foodie
         db.session.add(new_ingredient)
         db.session.commit()
+        # dict = {"name":"T1"}
+        # dict["ingredient"] = dict.pop("name") => # dict["ingredient"] = "T1"
+        # # {"ingredient":"T1"}
+        new_ingredient_response = new_ingredient.to_dict()
+        new_ingredient_response["ingredient"] = new_ingredient_response.pop("name") 
 
         return make_response({
             "message": f"Ingredient '{ingredient_name}' created and added to user",
-            "ingredient": new_ingredient.to_dict()
+            "ingredient": new_ingredient_response,
         }, 201)
+
+# @bp.post("")
+# def testadd_or_create_ingredient():
+#     user_id = get_logged_in_user()
+#     user = validate_model(Foodie, user_id)
+#     request_body = request.get_json()
+#     ingredient_name = request_body.get("name")
+#     check_ingredient_exists = check_ingredient_exists(ingredient_name, user)
+#     if check_ingredient_exists:
+        
+
+# def check_ingredient_exists(ingredient_name, user):
+#     query = db.select(Ingredient).where(Ingredient.name == ingredient_name)
+#     existing_ingredient = db.session.scalar(query)
+    
+#     if existing_ingredient:
+#         if user not in existing_ingredient.foodies:
+#             existing_ingredient.foodies.append(user)
+#             db.session.commit()
+#         return True
 
 @bp.get("")
 def get_all_ingredients():
@@ -52,13 +82,7 @@ def get_all_ingredients():
         for ingredient in ingredients
     ]
     return make_response({"ingredients": ingredient_response}, 200)
-# @bp.get("")
-# def get_all_ingredients():
-#     user_id = get_logged_in_user()
-#     user = validate_model(Foodie, user_id)
-#     ingredients = user.ingredients
-#     ingredient_names = [ingredient.name for ingredient in ingredients]
-#     return make_response({"ingredients": ingredient_names}, 200)
+
 
 @bp.delete("/<ingredient_id>")
 def delete_ingredient(ingredient_id):

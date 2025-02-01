@@ -15,6 +15,20 @@ def create_note():
     new_note = create_model(ShoppingNote, request_body)
     return new_note
 
+# @bp.get("")
+# def get_all_notes():
+#     user_id = get_logged_in_user()
+#     user = validate_model(Foodie, user_id)
+#     notes = user.shopping_notes
+#     note_response = [
+#         {
+#             "id": note.id,
+#             "note": note.name
+#         }
+#         for note in notes
+#     ]
+#     return make_response({"notes": note_response}, 200)
+
 @bp.get("")
 def get_all_notes():
     user_id = get_logged_in_user()
