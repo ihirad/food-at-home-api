@@ -71,7 +71,12 @@ def get_recipe_by_id(recipe_id):
         if response.status_code != 200:
             abort(make_response({"message": "Failed to fetch recipe information"}, response.status_code))
         recipe = response.json()
-        return make_response({"recipe": recipe}, 200)
+        return make_response({"recipes": extract_recipe_data(recipe)}, 200)
+
+        # results = recipe.get("recipe", [])
+        # selected_recipes = [extract_recipe_data(recipe) for recipe in results]
+        # return make_response({"recipes": selected_recipes}, 200)
+        # return make_response({"recipe": recipe}, 200)
     except requests.exceptions.RequestException as e:
         abort(make_response({"message": "An error occurred while fetching recipe information", "error": str(e)}, 500))
 
