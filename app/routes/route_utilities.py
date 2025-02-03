@@ -49,3 +49,35 @@ def get_models_with_filters(cls, filters):
         query = query.where(getattr(cls, key) == value)
     models = db.session.execute(query).scalars().all()
     return make_response({f"{cls.__name__.lower()}": [model.to_dict() for model in models]}, 200)
+
+def extract_recipe_data(recipe):
+    extended_ingredients = [
+        {
+            "nameClean": ing.get("nameClean"),
+            "original": ing.get("original"),
+            "amount": ing.get("amount"),
+            "unit": ing.get("unit")
+        }
+        for ing in recipe.get("extendedIngredients", [])
+    ]
+    
+    instructions = []
+    for instruction in recipe.get("analyzedInstructions", []):
+        for step in instruction.get("steps", []):
+            instructions.append(step.get("step"))
+    
+    missed_ingredients = [
+        ing.get("original") for ing in recipe.get("missedIngredients", [])
+    ]  
+
+    return {
+        "id": recipe.get("id"),
+        "title": recipe.get("title"),
+        "image": recipe.get("image"),
+        "readyInMinutes": recipe.get("readyInMinutes"),
+        "servings": recipe.get("servings"),
+        "extendedIngredients": extended_ingredients,
+        "instructions": instructions,
+        "missedIngredients": missed_ingredients,
+        "summary": recipe.get("summary")
+    }

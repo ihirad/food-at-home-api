@@ -9,7 +9,7 @@ from .routes.user_routes import bp as user_bp
 from .routes.recipe_routes import bp as recipe_bp
 from dotenv import load_dotenv
 # from authlib.integrations.flask_client import OAuth
-from app.extensions import oauth
+# from app.extensions import oauth
 # from google.oauth2 import id_token
 # from google.auth.transport import requests as google_requests
 
@@ -18,17 +18,12 @@ from app.extensions import oauth
 # login_manager = LoginManager()
 # login_manager.login_view = "login"
 
-
-
-
 def create_app(config=None):
     app = Flask(__name__)
-    oauth.init_app(app)
+    # oauth.init_app(app)
     CORS(app)
     load_dotenv()
-    # login_manager.init_app(app)
-
-    
+    # login_manager.init_app(app)   
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
@@ -40,20 +35,19 @@ def create_app(config=None):
     if config:
         app.config.update(config)
 
-    google = oauth.register(
-        name='google',
-        client_id=app.config["GOOGLE_ID"],
-        client_secret=None,
-        access_token_url='https://accounts.google.com/o/oauth2/token',
-        access_token_params=None,
-        authorize_url='https://accounts.google.com/o/oauth2/auth',
-        authorize_params={"scope": "openid email profile"},
-        api_base_url='https://www.googleapis.com/oauth2/v1/',
-        userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openId to fetch user info
-        client_kwargs={'scope': 'openid email profile'},
-        redirect_uri='http://localhost:5000/google-login'
-    )
-
+    # google = oauth.register(
+    #     name='google',
+    #     client_id=app.config["GOOGLE_ID"],
+    #     client_secret=None,
+    #     access_token_url='https://accounts.google.com/o/oauth2/token',
+    #     access_token_params=None,
+    #     authorize_url='https://accounts.google.com/o/oauth2/auth',
+    #     authorize_params={"scope": "openid email profile"},
+    #     api_base_url='https://www.googleapis.com/oauth2/v1/',
+    #     userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openId to fetch user info
+    #     client_kwargs={'scope': 'openid email profile'},
+    #     redirect_uri='http://localhost:5000/google-login'
+    # )
 
     # google = oauth.register(
     #     name='google',
@@ -69,8 +63,6 @@ def create_app(config=None):
     #     authorize_url='https://accounts.google.com/o/oauth2/auth',
         
     # )
-    
-
 
     # def get_google_oauth_token():
     #     return session.get('google_token')
@@ -80,8 +72,6 @@ def create_app(config=None):
     #     if response:
     #         session['google_token'] = response['access_token']
     #     return redirect(url_for('index'))
-
-  
     
     db.init_app(app)
     migrate.init_app(app, db)
@@ -91,11 +81,8 @@ def create_app(config=None):
     app.register_blueprint(user_bp)
     app.register_blueprint(recipe_bp)
 
-
-
     if __name__ == '__main__':
         app.run(debug=True)
-
 
     # def load_user(user_id):
     #     return Foodie.query.get(int(user_id))

@@ -12,7 +12,7 @@ from ..db import db
 from app.routes.route_utilities import validate_model
 from app.routes.route_utilities import *
 # from app import create_app,google
-from app.extensions import oauth
+# from app.extensions import oauth
 
 
 
