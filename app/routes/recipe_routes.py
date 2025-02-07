@@ -105,3 +105,14 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return make_response({"message": f"Recipe {recipe_id} deleted"}, 200)
+
+@bp.patch("/<recipe_id>")
+def update_favorite(recipe_id):
+    user_id = get_logged_in_user()
+    user = validate_model(Foodie, user_id)
+    recipe = validate_model(Recipe, recipe_id)
+    if recipe.foodie_id != user.id:
+        abort(make_response({"message": f"Recipe {recipe_id} does not belong to user {user_id}"}, 400))
+    recipe.favorite = not recipe.favorite
+    db.session.commit()
+    return make_response(recipe.to_dict(), 200)
