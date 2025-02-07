@@ -412,11 +412,9 @@ def login_user():
     if "username" not in request_body or "password" not in request_body:
         abort(make_response({"message": "Missing username or password"}, 400))
     if not request_body["username"] or not request_body["password"]:
-        abort(make_response({"message": "Invalid username or password"}, 400))
-    
+        abort(make_response({"message": "Invalid username or password"}, 400))    
     username = request_body["username"]
-    password = request_body["password"]
-    
+    password = request_body["password"]   
     foodie = Foodie.query.filter_by(username=username).first()
     if not foodie or not foodie.check_password(password):
         abort(make_response({"message": "Invalid username or password"}, 401))

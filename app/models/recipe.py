@@ -11,6 +11,7 @@ class Recipe(db.Model):
     name: Mapped[str]
     recipe_id: Mapped[int]
     image: Mapped[Optional[str]]
+    favorite: Mapped[Optional[bool]] = mapped_column(default=False)
     foodie_id: Mapped[int] = mapped_column(ForeignKey('foodie.id'))
     foodie: Mapped["Foodie"] = relationship(back_populates='recipes')
 
@@ -19,7 +20,8 @@ class Recipe(db.Model):
             id=self.id,
             name=self.name,
             recipe_id=self.recipe_id,
-            image=self.image
+            image=self.image,
+            favorite=self.favorite
             
         )
     
@@ -29,5 +31,6 @@ class Recipe(db.Model):
             name=recipe_data["name"],
             recipe_id=recipe_data["recipe_id"],
             image=recipe_data["image"],
+            favorite=recipe_data["favorite"],
             foodie_id=recipe_data["foodie_id"]
         )

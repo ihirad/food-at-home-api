@@ -11,8 +11,6 @@ import os
 load_dotenv()
 SPOONACULAR_ID = os.getenv("SPOONACULAR_ID")
 
-
-
 bp = Blueprint("recipe_bp", __name__, url_prefix="/recipes")
 
 @bp.get("/")
@@ -21,7 +19,7 @@ def get_recipe_by_ingredients():
     if include_ingredients:
         ingredients_list = [ingredient.strip() for ingredient in include_ingredients.split(",")]
         include_ingredients = ",".join(ingredients_list)
-
+    print("SpoonacularID is :", SPOONACULAR_ID)
     try:
         response = requests.get(
             "https://api.spoonacular.com/recipes/complexSearch",
@@ -51,6 +49,7 @@ def get_recipe_by_ingredients():
             {"message": "An error occurred while getting recipe", "error": str(e)},
             500
         ))
+
 
 @bp.get("/<recipe_id>")
 def get_recipe_by_id(recipe_id):
@@ -101,28 +100,3 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return make_response({"message": f"Recipe {recipe_id} deleted"}, 200)
-
-# @bp.get("/")
-# def get_recipes():
-#     ingredients = request.args.get("ingredients")
-#     if not ingredients:
-#         return make_response({"message": "Please provide a list of ingredients"}, 400)
-#     try:
-#         response = requests.get(
-#             "https://api.spoonacular.com/recipes/findByIngredients",
-#             params={
-#                 "apiKey": SPOONACULAR_ID,  
-#                 "number": 1,
-#                 "ingredients": ingredients
-#             }
-#         )
-#         if response.status_code != 200:
-#             abort(make_response({"message": "Failed to fetch recipes"}, response.status_code))
-#         recipes = response.json()  
-#         filtered_recipes = [
-#             {"id": recipe["id"], "name": recipe["title"], "image": recipe["image"]}
-#             for recipe in recipes
-#         ]
-#         return make_response({"recipes": filtered_recipes}, 200)
-#     except requests.exceptions.RequestException as e:
-#         abort(make_response({"message": "An error occurred while fetching recipes", "error": str(e)}, 500))
