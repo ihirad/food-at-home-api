@@ -32,15 +32,19 @@ def app():
 
 @pytest.fixture
 def client(app):
-    app = create_app({"TESTING": True, "SECRET_KEY": "test_secret"})
     return app.test_client()
 
 @pytest.fixture
 def test_user(app):
-    """Create a test user in the database."""
     with app.app_context():
-        user = Foodie(username="testuser", password=generate_password_hash("password"))
+        user = Foodie(username="marjana", password=generate_password_hash("abcd"))
         db.session.add(user)
         db.session.commit()
         return user 
 
+@pytest.fixture
+def clear_db(app):
+    with app.app_context():
+        yield
+        db.drop_all()
+        db.create_all()
