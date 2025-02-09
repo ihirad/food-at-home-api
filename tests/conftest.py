@@ -6,6 +6,8 @@ from app.db import db
 from flask.signals import request_finished
 from dotenv import load_dotenv
 import os
+from app.models.user import Foodie
+from werkzeug.security import generate_password_hash
 
 load_dotenv()
 
@@ -30,5 +32,15 @@ def app():
 
 @pytest.fixture
 def client(app):
+    app = create_app({"TESTING": True, "SECRET_KEY": "test_secret"})
     return app.test_client()
+
+@pytest.fixture
+def test_user(app):
+    """Create a test user in the database."""
+    with app.app_context():
+        user = Foodie(username="testuser", password=generate_password_hash("password"))
+        db.session.add(user)
+        db.session.commit()
+        return user 
 
