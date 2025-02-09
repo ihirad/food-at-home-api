@@ -21,7 +21,7 @@ def create_app(config=None):
     
     app.SPOONACULAR_ID = os.getenv("SPOONACULAR_ID")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-    app.config['GOOGLE_ID'] = os.getenv("GOOGLE_ID")
+    # app.config['GOOGLE_ID'] = os.getenv("GOOGLE_ID")
     if config:
         app.config.update(config)
 
