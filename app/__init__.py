@@ -7,6 +7,7 @@ from .routes.ingredient_routes import bp as ingredient_bp
 from .routes.shopping_note_routes import bp as shopping_note_bp
 from .routes.user_routes import bp as user_bp
 from .routes.recipe_routes import bp as recipe_bp
+from .routes.user_ingredient_route import bp as user_ingredient_bp
 from dotenv import load_dotenv
 # from authlib.integrations.flask_client import OAuth
 # from app.extensions import oauth
@@ -27,7 +28,9 @@ def create_app(config=None):
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] =  "postgresql+psycopg2://postgres:postgres@localhost:5432/food_at_home_development"
+    # app.config['SQLALCHEMY_DATABASE_URI'] =  os.getenv('SQLALCHEMY_DATABASE_URI')
     # app.secret_key = os.environ.get('SECRET_KEY')
     app.SPOONACULAR_ID = os.getenv("SPOONACULAR_ID")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -80,6 +83,7 @@ def create_app(config=None):
     app.register_blueprint(shopping_note_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(recipe_bp)
+    app.register_blueprint(user_ingredient_bp)
 
     if __name__ == '__main__':
         app.run(debug=True)
