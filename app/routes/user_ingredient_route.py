@@ -10,17 +10,12 @@ bp = Blueprint("user_ingredients_bp", __name__, url_prefix="/useringredients")
 @bp.put("/<ingredient_id>")
 def update_expiration_date(ingredient_id):
     user_id = get_logged_in_user()
-    user = validate_model(Foodie, user_id)
-    
+    user = validate_model(Foodie, user_id) 
     request_body = request.get_json()
-    # ingredient_id = request_body.get("ingredient_id")
-    expiration_date = request_body.get("expiration_date")
-    
+    expiration_date = request_body.get("expiration_date")   
     if not ingredient_id or not expiration_date:
-        abort(make_response({"message": "Missing required fields: 'ingredient_id' or 'expiration_date'"}, 400))#4xx
-    
-    ingredient = validate_model(Ingredient, ingredient_id)
-        
+        abort(make_response({"message": "Missing required fields: 'ingredient_id' or 'expiration_date'"}, 400))   
+    ingredient = validate_model(Ingredient, ingredient_id)       
     query = db.select(UserIngredient).where(UserIngredient.ingredient_id == ingredient.id and UserIngredient.foodie_id == user.id)
     user_ingredient = db.session.scalar(query)
     if user_ingredient:
