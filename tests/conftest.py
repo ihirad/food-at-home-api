@@ -195,15 +195,30 @@ def two_saved_recipes(app):
     }
 }
     
-    import pytest
+    db.session.add_all([recipe_1, recipe_2])
+
+    db.session.commit()
 
 @pytest.fixture
 def added_ingredient(auth_client):
     response = auth_client.post("/ingredients", json={"name": "Tomato"})
     return response.json["ingredient"]["id"]
 
+
+
+@pytest.fixture
+def test_note(auth_client):
+    response = auth_client.post("/notes", json={"note": "carrot"})
+    response = auth_client.post("/notes", json={"note": "Buy milk"})
+    return response.json["shoppingnote"]["id"]
+
+
+
+# @pytest.fixture
+# def test_note(auth_client):
+#     response = auth_client.post("/notes", json={"note": "Buy milk"})
+#     return response.json["id"]
+
+
+
     
-
-    db.session.add_all([recipe_1, recipe_2])
-
-    db.session.commit()
