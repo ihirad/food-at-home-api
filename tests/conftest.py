@@ -35,16 +35,13 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture
-def test_user(app):
-    with app.app_context():
-        user = Foodie(username="marjana", password=generate_password_hash("abcd"))
-        db.session.add(user)
-        db.session.commit()
-        return user 
+def auth_client(client):
+    user = Foodie(username="testuser", password=generate_password_hash("testpassword"))
+    db.session.add(user)
+    db.session.commit()
 
-@pytest.fixture
-def clear_db(app):
-    with app.app_context():
-        yield
-        db.drop_all()
-        db.create_all()
+    
+    login_response = client.post("/users/login", json={"username": "testuser", "password": "testpassword"})
+    assert login_response.status_code == 200  
+
+    return client  
