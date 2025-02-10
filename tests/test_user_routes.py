@@ -1,54 +1,64 @@
-# import pytest
-# from app.models.user import Foodie
-# from werkzeug.security import generate_password_hash
-# from app.db import db
 
-# def test_register_user(client):
-#     response = client.post("/users/register", json={
-#         "username": "testuser",
-#         "password": "testpassword"
-#     })
-#     assert response.status_code == 201
-#     assert "User" in response.json["message"]
+def test_register_user(client, new_user):
+    # Act
+    response = client.post("/users/register", json=new_user)
 
-# def test_register_user_missing_fields(client):
-#     response = client.post("/users/register", json={"username": "testuser"})
-#     assert response.status_code == 400
-#     assert "Missing username or password" in response.json["message"]
+    # Assert
+    assert response.status_code == 201
+    assert "User" in response.json["message"]
 
-# def test_login_user(client, app):
-#     with app.app_context():
-#         foodie = Foodie(username="testuser", password=generate_password_hash("testpassword"))
-#         db.session.add(foodie)
-#         db.session.commit()
+def test_register_user_missing_fields(client):
+    # Act
+    response = client.post("/users/register", json={"username": "testuser"})
+
+    # Assert
+    assert response.status_code == 400
+    assert "Missing username or password" in response.json["message"]
+
+def test_login_user(client, existing_user):
+    # Act
+    response = client.post("/users/login", json=existing_user)
+
+    # Assert
+    assert response.status_code == 200
+    assert "User" in response.json["message"]
+
+def test_login_invalid_credentials(client):
+    # Act
+    response = client.post("/users/login", json={
+        "username": "wronguser",
+        "password": "wrongpassword"
+    })
+
+    # Assert
+    assert response.status_code == 401
+    assert "Invalid username or password" in response.json["message"]
+
+
+def test_logout_user(auth_client):
+    # Act
+    response = auth_client.get("/users/logout")
+
+    # Assert
+    assert response.status_code == 200
+    assert "User logged out" in response.json["message"]
+
+
+def test_delete_user(client, delete_user):
+    # Act
+    response = client.delete(f"/users/{delete_user}")
+
+    # Assert
+    assert response.status_code == 200
+    assert f"User {delete_user} deleted" in response.json["message"]
+
+def test_delete_user_not_found(auth_client):
+    # Act
+    response = auth_client.delete("/users/100")
+    response_body = response.json
     
-#     response = client.post("/users/login", json={
-#         "username": "testuser",
-#         "password": "testpassword"
-#     })
-#     assert response.status_code == 200
-#     assert "User" in response.json["message"]
-
-# def test_login_invalid_credentials(client):
-#     response = client.post("/users/login", json={
-#         "username": "wronguser",
-#         "password": "wrongpassword"
-#     })
-#     assert response.status_code == 401
-#     assert "Invalid username or password" in response.json["message"]
-
-# def test_logout_user(client):
-#     response = client.get("/users/logout")
-#     assert response.status_code == 200
-#     assert "User logged out" in response.json["message"]
-
-# def test_delete_user(client, app):
-#     with app.app_context():
-#         foodie = Foodie(username="deleteuser", password=generate_password_hash("testpassword"))
-#         db.session.add(foodie)
-#         db.session.commit()
-#         user_id = foodie.id
-    
-#     response = client.delete(f"/users/{user_id}")
-#     assert response.status_code == 200
-#     assert f"User {user_id} deleted" in response.json["message"]
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {
+    "message": "Foodie id 100 is not found"
+}

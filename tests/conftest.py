@@ -223,8 +223,27 @@ def test_note(auth_client):
     response = auth_client.post("/notes", json={"note": "Buy milk"})
     return response.json["shoppingnote"]["id"]
 
+@pytest.fixture
+def new_user():
+    return {
+        "username": "testuser",
+        "password": "testpassword"
+    }
+
+@pytest.fixture
+def existing_user(app):
+        foodie = Foodie(username="testuser", password=generate_password_hash("testpassword"))
+        db.session.add(foodie)
+        db.session.commit()
+        return {"username": "testuser", "password": "testpassword"}
 
 
-
-
-    
+@pytest.fixture
+def delete_user(client):
+    user = Foodie(username="deleteuser", password=generate_password_hash("testpassword"))
+    db.session.add(user)
+    db.session.commit()
+    user_id = user.id
+    yield user_id
+    db.session.delete(user)
+    db.session.commit()  
