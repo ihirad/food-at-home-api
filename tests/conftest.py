@@ -212,7 +212,7 @@ def saved_recipe_payload():
 
 @pytest.fixture
 def added_ingredient(auth_client):
-    response = auth_client.post("/ingredients", json={"name": "Tomato"})
+    response = auth_client.post("/ingredients", json={"ingredient": "Tomato", "expiration_date": None})
     return response.json["ingredient"]["id"]
 
 

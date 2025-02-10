@@ -20,7 +20,7 @@ def test_add_or_create_ingredient_without_name(auth_client):
     # Assert
     assert response.status_code == 400
     assert "message" in response_body
-    assert response_body == {"message": "Missing required field: 'name'"}
+    assert response_body == {"message": "Missing required field: 'ingredient'"}
 
 
 def test_get_all_ingredients(auth_client):
