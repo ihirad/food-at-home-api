@@ -94,29 +94,19 @@ def test_get_recipe_by_id(auth_client):
     }
 }
 
-
-def test_save_recipe(auth_client, app):
+def test_save_recipe(auth_client, saved_recipe_payload):
     # Act
-    with app.app_context():
-        response = auth_client.post("/recipes", json={
-            "image": "https://img.spoonacular.com/recipes/782601-312x231.jpg",
-            "name": "Red Kidney Bean Jambalaya",
-            "favorite": True,
-            "recipe_id": 782601
-        })
-
+    response = auth_client.post("/recipes", json=saved_recipe_payload)
+    
     # Assert
     assert response.status_code == 201  
     response_body = response.json  
-
+    
     assert isinstance(response_body["recipe"]["id"], int)  
-
-    response_body == {
-    "image": "https://img.spoonacular.com/recipes/782601-312x231.jpg",
-    "name": "Red Kidney Bean Jambalaya",
-    "favorite": True,
-    "recipe_id": 782601
-    }
+    assert response_body["recipe"]["image"] == saved_recipe_payload["image"]
+    assert response_body["recipe"]["name"] == saved_recipe_payload["name"]
+    assert response_body["recipe"]["favorite"] == saved_recipe_payload["favorite"]
+    assert response_body["recipe"]["recipe_id"] == saved_recipe_payload["recipe_id"]
 
 
 def test_delete_recipe_that_does_not_exist(auth_client):
@@ -131,7 +121,16 @@ def test_delete_recipe_that_does_not_exist(auth_client):
     "message": "Recipe id 100 is not found"
 }
 
+# def test_delete_recipe(auth_client):  
+#     # Act
+#     response = auth_client.delete("/recipes")
+#     response_body = response.get_json()
 
+#     # Assert
+#     assert response.status_code == 200
+#     assert response_body == {
+#     "message": "Recipe 2 deleted"
+# }
 
 
 

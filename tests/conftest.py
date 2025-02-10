@@ -199,6 +199,17 @@ def two_saved_recipes(app):
 
     db.session.commit()
 
+
+@pytest.fixture
+def saved_recipe_payload():
+    return {
+        "image": "https://img.spoonacular.com/recipes/782601-312x231.jpg",
+        "name": "Red Kidney Bean Jambalaya",
+        "favorite": True,
+        "recipe_id": 782601
+    }
+
+
 @pytest.fixture
 def added_ingredient(auth_client):
     response = auth_client.post("/ingredients", json={"name": "Tomato"})
@@ -213,11 +224,6 @@ def test_note(auth_client):
     return response.json["shoppingnote"]["id"]
 
 
-
-# @pytest.fixture
-# def test_note(auth_client):
-#     response = auth_client.post("/notes", json={"note": "Buy milk"})
-#     return response.json["id"]
 
 
 
