@@ -84,10 +84,10 @@ def extract_recipe_data(recipe):
         "summary": recipe.get("summary")
     }
 
-def get_authenticated_user():
+def get_authenticated_user(cls):
     """Validate and return the logged-in user"""
-    user_id = get_logged_in_user()
-    return validate_model(Foodie, user_id)
+    model_id = get_logged_in_user()
+    return validate_model(cls, model_id)
 
 def validate_and_parse_request(request):
     """Validate request and parse expiration date"""

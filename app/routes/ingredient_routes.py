@@ -10,7 +10,7 @@ bp = Blueprint("ingredients_bp", __name__, url_prefix="/ingredients")
 
 @bp.post("")
 def add_or_create_ingredient():
-    user = get_authenticated_user()
+    user = get_authenticated_user(Foodie)
     ingredient_name, expiration_date = validate_and_parse_request(request)
     existing_ingredient = find_existing_ingredient(ingredient_name)
     if existing_ingredient:
